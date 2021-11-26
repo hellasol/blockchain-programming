@@ -1,35 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { Card, Button, CardText, Row, Col } from "reactstrap";
+import { Col } from "reactstrap";
 import { ContractsApi } from "./ContractsApi";
-import "./App.css";
-import lightbulbON from "./images/lightbulbON.png";
-import lightbulbOFF from "./images/lightbulbOFF.png";
+import "./css/style.css"
+import faucet from "./img/faucet.png"
 import { SpinnerAnimation } from "./components/spinner";
+import { SimpleSlider } from "./components/slider";
 
 export function DApp() {
   const [balance, setBalance] = useState(0);
-  const [lightStatus, setLightStatus] = useState(false);
   const [pending, setPending] = useState(false);
-  const [canApprove, setCanApprove] = useState(true);
-  const [canToggle, setCanToggle] = useState(false);
   const [hasEthereum, setHasEthereum] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState(0);
 
   const contractsApi = new ContractsApi();
   async function syncData() {
     const currentBalance = await contractsApi.getCurrentBlance();
-    const currentLightStatus = await contractsApi.getState();
     const currentSelectedAddress = contractsApi.selectedAddress;
     setBalance(currentBalance);
-    setLightStatus(currentLightStatus);
     setSelectedAddress(currentSelectedAddress);
   }
   useEffect(() => {
     async function onMount() {
       const hasEthereum = await contractsApi.init();
       setHasEthereum(hasEthereum);
-      console.log("1" + hasEthereum);
-
       if (hasEthereum) {
         await syncData();
         setInterval(syncData, 5000);
@@ -46,7 +39,6 @@ export function DApp() {
     );
   }
   if (!hasEthereum) {
-    console.log("2" + hasEthereum);
     return (
       <h1>
         Non-Ethereum browser detected. You should consider trying MetaMask!
@@ -54,98 +46,86 @@ export function DApp() {
     );
   }
 
-  function handleToggle() {
+  function handleMint() {
     contractsApi
-      .toggle()
-      .onTxHash(() => setPending(true))
-      .onConfirmation(() => {
-        setPending(false);
-        setCanToggle(false);
-        setCanApprove(true);
-      });
-  }
-  function handleWithdraw() {
-    contractsApi
-      .withdraw()
+      .mint()
       .onTxHash(() => setPending(true))
       .onConfirmation(() => setPending(false));
   }
 
-  function handleApprove() {
-    contractsApi
-      .approve()
-      .onTxHash(() => setPending(true))
-      .onConfirmation(() => {
-        setPending(false);
-        setCanApprove(false);
-        setCanToggle(true);
-      });
-  }
-
   return (
     <div className="App">
-      <div className="App-header">
-        <p>Your account: {selectedAddress}</p>
-        <p>Your DEC balance: {balance}</p>
-        <h1>Decentralight</h1>
-      </div>
-      <br />
-      <br />
-      <Row>
-        <Col sm={{ size: 4, offset: 1 }}>
-          <Card
-            body
-            inverse
-            style={{
-              backgroundColor: "#282c34",
-              borderColor: "#282c34",
-              position: "",
-            }}
-            className="text-center"
-          >
-            <br />
-            <h1>Faucet</h1>
-            <br />
-            <br />
-            <CardText>
-              <Button onClick={handleWithdraw}>
-                Get 1 decentralight coin!
-              </Button>
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-            </CardText>
-          </Card>
-        </Col>
-        <Col sm={{ size: 3, offset: 0 }}>
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
-          <br />
+      <nav className="navbar navbar-expand-lg navbar-dark">
+        <div className="container">
+          <a className="navbar-brand logo" href="">
+            VOTE
+          </a>
+          <div className="wallet-info" data-scroll-nav="2">Your account: {selectedAddress}</div>
+          <div className="wallet-info" data-scroll-nav="2">Your VOTE balance: {balance}</div>
+        </div>
+      </nav>
 
-          {canApprove && (
-            <Button onClick={handleApprove}>Approve transaction</Button>
-          )}
-          {canToggle && (
-            <Button onClick={handleToggle}>Control the light</Button>
-          )}
-        </Col>
+      {/* CREATE POLL */}
+      <section className="about pt-300 pb-150" data-scroll-index="1">
+        <div className="container">
+          <div class="row">
 
-        <Col sm={{ size: 2, offset: 0 }}>
-          <br />
-          <br />
-          {lightStatus ? (
-            <img src={lightbulbON} alt="ON" width="200" />
-          ) : (
-            <img src={lightbulbOFF} alt="OFF" width="200" />
-          )}
-        </Col>
-      </Row>
-    </div>
+            <div class="col-lg-5 col-md-6">
+              <h2>CREATE POLL </h2>
+              <form>
+                <label className="formLabel" for="pollName">Poll Name:</label><br />
+                <input className="formInput" type="text" id="pollName"></input><br />
+
+                <label className="formLabel" for="pollDescription">Poll Description:</label><br />
+                <textarea className="formInput" type="text" id="pollDescription"></textarea><br />
+
+                <label className="formLabel" for="pollOption1">Poll Option 1:</label><br />
+                <input className="formInput" type="text" id="pollOption1"></input><br />
+
+                <label className="formLabel" for="pollOption2">Poll Option 2:</label><br />
+                <input className="formInput" type="text" id="pollOption2"></input><br />
+
+                <label className="formLabel" for="pollOption3">Poll Option 3:</label><br />
+                <input className="formInput" type="text" id="pollOption3"></input><br />
+
+                <label className="formLabel" for="deadline">Expiration Date:</label><br />
+                <input className="formInput" type="text" id="deadline"></input><br />
+              </form>
+            </div>
+            {/* FAUCET */}
+            <div class="col-lg-7 col-md-6">
+              <div className="container">
+                <h2>FAUCET</h2>
+                <div className="faucet-img">
+                  <img src={faucet}></img>
+                </div>
+                <span className="about-button">
+                  <a className="main-btn" onClick={handleMint}>Get 1 VOTE Token!</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* ALL POLLS */}
+      <section className="services pt-100 pb-150" data-scroll-index="3">
+        <div className="container">
+          <h2>ALL POLLS</h2>
+          <SimpleSlider />
+        </div>
+      </section>
+      {/* FOOTER */}
+      <section>
+        <footer className="pt-100">
+          <div className="row text-center">
+            <div className="col-md-12">
+              <p className="copy pt-10">
+                Group ? &copy; 2021 All Right Reserved
+              </p>
+            </div>
+          </div>
+        </footer>
+      </section>
+    </div >
   );
 }

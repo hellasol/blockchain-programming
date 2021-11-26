@@ -16,9 +16,11 @@
         "react": "^16.13.1",
         "react-bootstrap": "^1.0.0-beta.5",
         "react-dom": "^16.13.1",
+        "react-responsive-carousel": "^3.2.22",
         "react-scripts": "3.4.1",
+        "react-slick": "^0.28.1",
         "react-switch": "^5.0.1",
-        "reactstrap": "^8.4.1", 
+        "reactstrap": "^8.4.1",
         "web3": "^1.6.1"
     },
     "scripts": {
