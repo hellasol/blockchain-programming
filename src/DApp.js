@@ -8,16 +8,19 @@ import { SimpleSlider } from "./components/slider";
 
 export function DApp() {
   const [balance, setBalance] = useState(0);
+  const [currentEtherBalance, setCurrentEtherBalance] = useState(0);
   const [pending, setPending] = useState(false);
   const [hasEthereum, setHasEthereum] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState(0);
 
   const contractsApi = new ContractsApi();
   async function syncData() {
-    const currentBalance = await contractsApi.getCurrentBlance();
-    const currentSelectedAddress = contractsApi.selectedAddress;
+    const currentBalance = await contractsApi.getCurrentVoteTokenBalance();
     setBalance(currentBalance);
+    const currentSelectedAddress = contractsApi.selectedAddress;
     setSelectedAddress(currentSelectedAddress);
+    const currentEtherBalance = await contractsApi.getCurrentEtherBalance(currentSelectedAddress);
+    setCurrentEtherBalance(currentEtherBalance);
   }
   useEffect(() => {
     async function onMount() {
@@ -61,7 +64,9 @@ export function DApp() {
             VOTE
           </a>
           <div className="wallet-info" data-scroll-nav="2">Your account: {selectedAddress}</div>
+          <div className="wallet-info" data-scroll-nav="2">Your ETH balance: {currentEtherBalance}</div>
           <div className="wallet-info" data-scroll-nav="2">Your VOTE balance: {balance}</div>
+          
         </div>
       </nav>
 

@@ -1,8 +1,6 @@
 import Web3 from "web3";
-import { abi as erc20Abi } from "./build/contracts/VoteToken.json"; 
-import { abi as faucetAbi } from "./build/contracts/VoteTokenFaucet.json"; 
-
-//TODO votingLogicAbi
+import { abi as erc20Abi } from "./build/contracts/VoteToken.json";
+import { abi as faucetAbi } from "./build/contracts/VoteTokenFaucet.json";
 export class ContractsApi {
   async init() {
     if (!window.ethereum) {
@@ -24,49 +22,27 @@ export class ContractsApi {
 
     this.erc20contract = new this.web3.eth.Contract(erc20Abi, this.erc20ContractAddress);
     this.faucetContract = new this.web3.eth.Contract(faucetAbi, this.faucetContractAddress);
-
-    console.log(this.erc20contract);
-    console.log(this.faucetContract);
   }
 
   get selectedAddress() {
     return window.ethereum.selectedAddress;
   }
 
-  // approve() {
-  //   const promiEvent = this.erc20contract.methods
-  //     .approve(this.decentralightContractAddress, 1)
-  //     .send({ from: this.selectedAddress });
-  //   return new TransactionWatcher(promiEvent);
-  // }
-  // async getState() {
-  //   return await this.decentralightContract.methods.getState().call();
-  // }
-  // async getAllowance() {
-  //   return await this.erc20contract.methods.allowance(
-  //     this.selectedAddress,
-  //     this.decentralightContractAddress
-  //   );
-  // }
-  // toggle() {
-  //   const promiEvent = this.decentralightContract.methods
-  //     .toggle()
-  //     .send({ from: this.selectedAddress });
-  //   return new TransactionWatcher(promiEvent);
-  // }
-  async getCurrentBlance() {
-    const balance = await this.erc20contract.methods
+  async getCurrentVoteTokenBalance() {
+    return this.erc20contract.methods
       .balanceOf(this.selectedAddress)
       .call();
-    return balance;
   }
-  // async transferFrom() {
-  //   await this.erc20contract.methods
-  //     .transferFrom(this.selectedAddress, this.decentralightContractAddress)
-  //     .send({ from: this.selectedAddress });
-  // }
+
+  async getCurrentEtherBalance(address) {
+    return this.web3.eth.getBalance(address);
+  }
+
   mint() {
-    const promiEvent = this.faucetContract.methods.mint()
+    const promiEvent = this.faucetContract.methods
+      .mint()
+      .send({ from: this.selectedAddress });
+    console.log(promiEvent);
     return new TransactionWatcher(promiEvent);
   }
 }
@@ -75,13 +51,13 @@ class TransactionWatcher {
     this.promiEvent = promiEvent;
   }
   onTxHash(callback) {
-    this.promiEvent.once("transactionHash", () => {
+    this.promiEvent.on("transactionHash", () => {
       callback();
     });
     return this;
   }
   onConfirmation(callback) {
-    this.promiEvent.once("confirmation", () => {
+    this.promiEvent.on("confirmation", () => {
       callback();
     });
     return this;
