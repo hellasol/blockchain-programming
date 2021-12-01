@@ -8,7 +8,7 @@ import { SimpleSlider } from "./components/slider";
 
 export function DApp() {
   const [balance, setBalance] = useState(0);
-  const [currentEtherBalance, setCurrentEtherBalance] = useState(0);
+  const [etherBalance, setCurrentEtherBalance] = useState(0);
   const [pending, setPending] = useState(false);
   const [hasEthereum, setHasEthereum] = useState(true);
   const [selectedAddress, setSelectedAddress] = useState(0);
@@ -17,8 +17,10 @@ export function DApp() {
   async function syncData() {
     const currentBalance = await contractsApi.getCurrentVoteTokenBalance();
     setBalance(currentBalance);
+
     const currentSelectedAddress = contractsApi.selectedAddress;
     setSelectedAddress(currentSelectedAddress);
+
     const currentEtherBalance = await contractsApi.getCurrentEtherBalance(currentSelectedAddress);
     setCurrentEtherBalance(currentEtherBalance);
   }
@@ -36,9 +38,9 @@ export function DApp() {
 
   if (pending) {
     return (
-      <Col sm={{ size: 4, offset: 6 }}>
+      <div className="spinner">
         <SpinnerAnimation />
-      </Col>
+      </div>
     );
   }
   if (!hasEthereum) {
@@ -58,23 +60,21 @@ export function DApp() {
 
   return (
     <div className="App">
-      <nav className="navbar navbar-expand-lg navbar-dark">
+      {/* HEADER */}
+      <nav className="navbar">
         <div className="container">
-          <a className="navbar-brand logo" href="">
+          <a className="logo">
             VOTE
           </a>
-          <div className="wallet-info" data-scroll-nav="2">Your account: {selectedAddress}</div>
-          <div className="wallet-info" data-scroll-nav="2">Your ETH balance: {currentEtherBalance}</div>
-          <div className="wallet-info" data-scroll-nav="2">Your VOTE balance: {balance}</div>
-          
+          <div className="wallet-info">Your account: {selectedAddress}</div>
+          <div className="wallet-info">Your ETH balance: {etherBalance}</div>
+          <div className="wallet-info">Your VOTE balance: {balance}</div>
         </div>
       </nav>
-
-      {/* CREATE POLL */}
-      <section className="about pt-300 pb-150" data-scroll-index="1">
+      <section className="pt-150 pb-150">
         <div className="container">
           <div class="row">
-
+            {/* CREATE POLL */}
             <div class="col-lg-5 col-md-6">
               <h2>CREATE POLL </h2>
               <form>
@@ -113,7 +113,7 @@ export function DApp() {
         </div>
       </section>
       {/* ALL POLLS */}
-      <section className="services pt-100 pb-150" data-scroll-index="3">
+      <section className="services pt-100 pb-150">
         <div className="container">
           <h2>ALL POLLS</h2>
           <SimpleSlider />
@@ -124,7 +124,7 @@ export function DApp() {
         <footer className="pt-100">
           <div className="row text-center">
             <div className="col-md-12">
-              <p className="copy pt-10">
+              <p className="copy pt-100">
                 Group ? &copy; 2021 All Right Reserved
               </p>
             </div>
