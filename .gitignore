@@ -10,6 +10,7 @@ secrets.json
 
 # production
 /build
+/src/build
 
 # misc
 .DS_Store

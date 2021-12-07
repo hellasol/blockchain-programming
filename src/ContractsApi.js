@@ -1,6 +1,8 @@
 import Web3 from "web3";
 import { abi as erc20Abi } from "./build/contracts/VoteToken.json";
 import { abi as faucetAbi } from "./build/contracts/VoteTokenFaucet.json";
+import { abi as pollAbi } from "./build/contracts/Poll.json";
+
 export class ContractsApi {
   async init() {
     if (!window.ethereum) {
@@ -19,9 +21,11 @@ export class ContractsApi {
 
     this.erc20ContractAddress = process.env.REACT_APP_ERC20CONTRACT_ADDRESS;
     this.faucetContractAddress = process.env.REACT_APP_FAUCET_CONTRACT_ADDRESS;
+    this.pollContractAddress = process.env.REACT_APP_POLL_CONTRACT_ADDRESS;
 
     this.erc20contract = new this.web3.eth.Contract(erc20Abi, this.erc20ContractAddress);
     this.faucetContract = new this.web3.eth.Contract(faucetAbi, this.faucetContractAddress);
+    this.pollContract = new this.web3.eth.Contract(pollAbi, this.pollContractAddress);
   }
 
   get selectedAddress() {
@@ -44,6 +48,10 @@ export class ContractsApi {
       .send({ from: this.selectedAddress });
     console.log(promiEvent);
     return new TransactionWatcher(promiEvent);
+  }
+
+  async fetchPoll(){
+    return this.pollContract.methods.token().call();
   }
 }
 class TransactionWatcher {

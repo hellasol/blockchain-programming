@@ -110,3 +110,8 @@ span {
     padding-bottom: 150px !important;
 }
 
+/* disable because overlapping */
+.carousel .control-dots{
+    display: none;
+}
+

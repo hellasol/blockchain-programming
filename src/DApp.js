@@ -24,6 +24,7 @@ export function DApp() {
     const currentEtherBalance = await contractsApi.getCurrentEtherBalance(currentSelectedAddress);
     setCurrentEtherBalance(currentEtherBalance);
   }
+
   useEffect(() => {
     async function onMount() {
       const hasEthereum = await contractsApi.init();
@@ -74,7 +75,7 @@ export function DApp() {
       <section className="pt-150 pb-150">
         <div className="container">
           <div class="row">
-            {/* CREATE POLL */}
+            {/* CREATE POLL
             <div class="col-lg-5 col-md-6">
               <h2>CREATE POLL </h2>
               <form>
@@ -96,7 +97,10 @@ export function DApp() {
                 <label className="formLabel" for="deadline">Expiration Date:</label><br />
                 <input className="formInput" type="text" id="deadline"></input><br />
               </form>
+            
             </div>
+            */}
+
             {/* FAUCET */}
             <div class="col-lg-7 col-md-6">
               <div className="container">
@@ -116,7 +120,7 @@ export function DApp() {
       <section className="services pt-100 pb-150">
         <div className="container">
           <h2>ALL POLLS</h2>
-          <SimpleSlider />
+          <SimpleSlider/>
         </div>
       </section>
       {/* FOOTER */}
