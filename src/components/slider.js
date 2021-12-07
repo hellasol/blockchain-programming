@@ -8,35 +8,40 @@ export class SimpleSlider extends Component {
     constructor() {
         super();
         this.state = {
-            pollName : "testName",
-            pollDescription : "testDescription lalalalallatestDescription lalalalallatestDescription lalalalallatestDescription lalalalalla",
-            option1 : "TestOption1",
-            option2 : "TestOption2"
-        };
-        this.handleJoinPoll = this.handleJoinPoll.bind(this);
-        this.handleVote = this.handleVote.bind(this);
+            polls : 0
+        }
     }
     
-    componentDidUpdate() {
-        this.fetchData();
+    async componentDidUpdate() {
+        this.fetchPolls();
+        setInterval(this.fetchPolls, 100000);
     }
 
-    async fetchData(){
-        const contractsApi = new ContractsApi();
+    async fetchPolls(){
         try {
-            const data = await contractsApi.fetchPoll()
-            console.log('data: ', data)
+            const contractsApi = new ContractsApi();
+            const nrOfPolls = await contractsApi.getPolls()
+            console.log('data: ', nrOfPolls)
+            for (var i = 1; i <= nrOfPolls; i++) {
+                const pollInformation = await contractsApi.getPollInformation(i);
+                const pollCandidates = await contractsApi.getPollCandidates(i);
+                /* generate Carousel div with this data */ 
+            }
           } catch (err) {
             console.log("Error: ", err)
           }
         console.log('fetchedData')
     }
 
-    handleJoinPoll(){
+    handleJoinPoll(pollID){
+        const contractsApi = new ContractsApi();
+        contractsApi.joinPoll(pollID);
         console.log('joinedPoll')
     }
 
-    handleVote(){
+    handleVote(pollID, value){
+        const contractsApi = new ContractsApi();
+        contractsApi.vote(pollID, value);
         console.log('voted')
     }
 
@@ -44,17 +49,18 @@ export class SimpleSlider extends Component {
         return (
             <Carousel>
                 <div>
-                    <h4>{this.state.pollName}</h4>
-                    <div className="poll-description">{this.state.pollDescription}</div>
-                    <label className="formLabel" for="option1">{this.state.option1}</label>
+                    <h4>PollID</h4>
+                    <h4>PollName</h4>
+                    <div className="poll-description">PollDescription</div>
+                    <label className="formLabel" for="option1">Option1</label>
                     <input type="radio" value="option1"></input><br />
-                    <label className="formLabel" for="option2">{this.state.option2}</label>
+                    <label className="formLabel" for="option2">Option2</label>
                     <input type="radio" value="option2"></input><br />
                     <span className="about-button">
-                        <a className="main-btn" onClick={this.handleJoinPoll}>Join Poll</a>
+                        <a className="main-btn" onClick={this.handleJoinPoll(1)}>Join Poll</a>
                     </span>
                     <span className="about-button">
-                        <a className="main-btn" onClick={this.handleVote}>Vote</a>
+                        <a className="main-btn" onClick={this.handleVote(1, 1)}>Vote</a>
                     </span>
                 </div>
                 {/* 

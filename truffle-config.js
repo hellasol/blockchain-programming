@@ -72,14 +72,14 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
-    kovan: {
+    /*kovan: {
       provider: () =>
         new HDWalletProvider(
           mnemonic,
           `https://kovan.infura.io/v3/${projectId}`
         ),
       network_id: "42",
-    },
+    },*/
   },
 
   // Set default mocha options here, use special reporters etc.
