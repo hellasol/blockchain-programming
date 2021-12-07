@@ -4,6 +4,8 @@ import "./VoteToken.sol";
 
 contract Voting {
 
+    event _PollCreated(string pollName, string description, uint256 indexed pollID, address indexed creator);
+
     struct Poll {
         string pollName;
         string description;
@@ -32,8 +34,8 @@ contract Voting {
         require(_token != address(0) && address(token) == address(0));
         token = VoteToken(_token);
     }  
-    
-    function createPoll(string memory _pollName, string memory _description, string memory _candidate1, string memory _candidate2) public {
+
+    function createPoll(string memory _pollName, string memory _description, string memory _candidate1, string memory _candidate2) public returns (uint256){
         pollID = pollID + 1;
 
         Poll storage newPoll = polls[pollID];
@@ -43,6 +45,9 @@ contract Voting {
 
         polls[pollID].candidates.push(Candidate(_candidate1,0));
         polls[pollID].candidates.push(Candidate(_candidate2,0));
+
+        emit _PollCreated(_pollName, _description, pollID, msg.sender);
+        return pollID;
     }
     
     function getNumCandidate(uint256 _pollID) public view returns(uint256) {

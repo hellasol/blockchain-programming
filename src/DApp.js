@@ -64,10 +64,14 @@ export function DApp() {
       .onConfirmation(() => setPending(false));
   }
 
+  //TODO: check the create poll in contracts api --> empty strings are returned when trying to fetch the information, where does it go wrong? 
+  //it works in remix... 
   function handleCreatePoll() {
-    contractsApi.createPoll({pollName}, {pollDescription}, {option1}, {option2});
+    const pollID = contractsApi
+     .createPoll({pollName}, {pollDescription}, {option1}, {option2});
   }
 
+  //check how many polls are deployed
   async function logPolls() {
     const numberOfPolls = await contractsApi.getPolls();
     console.log(numberOfPolls);
@@ -132,7 +136,7 @@ export function DApp() {
       <section className="services pt-100 pb-150">
         <div className="container">
           <h2>ALL POLLS</h2>
-          {/* <SimpleSlider/> */}
+          <SimpleSlider/>
         </div>
       </section>
       {/* FOOTER */}

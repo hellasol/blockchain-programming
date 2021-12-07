@@ -51,7 +51,10 @@ export class ContractsApi {
   }
 
   async createPoll(pollName, description, option1, option2){
-    this.votingContract.methods.createPoll(pollName, description, option1, option2);
+    console.log(pollName, description, option1, option2)
+    return this.votingContract.methods
+    .createPoll(pollName, description, option1, option2)
+    .send({ from: this.selectedAddress });
   }
 
   async getPolls(){
@@ -63,17 +66,21 @@ export class ContractsApi {
   }
 
   async getPollCandidates(pollID){
-    return this.votingContract.methods.getPollCandidates(pollID).call();
-  }
+    return this.votingContract.methods.getCandidates(pollID).call();
+  } 
 
-  joinPoll(pollID){
-    console.log(pollID)
-    this.votingContract.methods.joinPoll(pollID).call();
-    this.erc20contract.methods.approve(this.votingContractAddress, 1).call();
+
+  //TODO (optional i guess): now to seperate transactions that both need the confirmation --> if one fails you might not be able to vote but can't join either
+  //idea: "link" them so they're both only executed if both are valid
+  async joinPoll(pollID){
+    this.votingContract.methods.joinPoll(pollID).send({ from: this.selectedAddress });
+    this.erc20contract.methods.approve(this.votingContractAddress, 1).send({ from: this.selectedAddress });
   }
 
   vote(pollID, voteIndex){
-    this.votingContract.methods.vote(pollID, voteIndex).call();
+    const promiEvent = this.votingContract.methods.vote(pollID, voteIndex).send({ from: this.selectedAddress });
+    console.log(promiEvent);
+    return new TransactionWatcher(promiEvent);
   }
 }
 

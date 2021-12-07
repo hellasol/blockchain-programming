@@ -8,41 +8,41 @@ export class SimpleSlider extends Component {
     constructor() {
         super();
         this.state = {
-            polls : 0
+            polls : []
         }
-    }
-    
-    async componentDidUpdate() {
-        this.fetchPolls();
-        setInterval(this.fetchPolls, 100000);
+        this.fetchPolls = this.fetchPolls.bind(this);
+        this.handleJoinPoll = this.handleJoinPoll.bind(this);
+        this.handleVote = this.handleVote.bind(this);
     }
 
+    //TODO: go through all polls and get their information and candidates to display them in the carousel
     async fetchPolls(){
         try {
             const contractsApi = new ContractsApi();
             const nrOfPolls = await contractsApi.getPolls()
-            console.log('data: ', nrOfPolls)
+            console.log('numberOfPolls: ', nrOfPolls)
             for (var i = 1; i <= nrOfPolls; i++) {
                 const pollInformation = await contractsApi.getPollInformation(i);
                 const pollCandidates = await contractsApi.getPollCandidates(i);
+                console.log(pollInformation)
+                console.log(pollCandidates)
                 /* generate Carousel div with this data */ 
             }
           } catch (err) {
             console.log("Error: ", err)
           }
-        console.log('fetchedData')
     }
 
     handleJoinPoll(pollID){
         const contractsApi = new ContractsApi();
         contractsApi.joinPoll(pollID);
-        console.log('joinedPoll')
     }
 
     handleVote(pollID, value){
         const contractsApi = new ContractsApi();
-        contractsApi.vote(pollID, value);
-        console.log('voted')
+        contractsApi
+        .vote(pollID, value)
+        .onConfirmation(() => console.log('voted for', value, 'in Poll', pollID));
     }
 
     render() {
@@ -57,10 +57,13 @@ export class SimpleSlider extends Component {
                     <label className="formLabel" for="option2">Option2</label>
                     <input type="radio" value="option2"></input><br />
                     <span className="about-button">
-                        <a className="main-btn" onClick={this.handleJoinPoll(1)}>Join Poll</a>
+                        <a className="main-btn" onClick={() => this.handleJoinPoll(6)}>Join Poll</a>
                     </span>
                     <span className="about-button">
-                        <a className="main-btn" onClick={this.handleVote(1, 1)}>Vote</a>
+                        <a className="main-btn" onClick={() => this.handleVote(6, 1)}>Vote</a>
+                    </span>
+                    <span className="about-button">
+                        <a className="main-btn" onClick={this.fetchPolls}>Reload</a>
                     </span>
                 </div>
                 {/* 
