@@ -80,6 +80,14 @@ module.exports = {
         ),
       network_id: "42",
     },
+    uzheth: {
+      provider: () =>
+        new HDWalletProvider(
+          mnemonic,
+          'http://130.60.244.246:8545'
+        ),
+      network_id: "702",
+    },
   },
 
   // Set default mocha options here, use special reporters etc.

@@ -5,6 +5,7 @@ import { abi as pollAbi } from "./build/contracts/Poll.json";
 
 //ContractsApi is a wrapper for web3.js. It provides a convenient way to interact with the contracts.
 export class ContractsApi {
+
   async init() {
     if (!window.ethereum) {
       return false;
@@ -19,10 +20,14 @@ export class ContractsApi {
 
   constructor() {
     this.web3 = new Web3(Web3.givenProvider);
+    //FOR KOVAN
+    // REACT_APP_ERC20CONTRACT_ADDRESS = 0xBBf6a32515F96954bd51739AE67B87c5037EA3a4
+    // REACT_APP_FAUCET_CONTRACT_ADDRESS = 0xA09646632DA392Fe6256D70e537dF7a2Ca09bAB1
+    // REACT_APP_POLL_CONTRACT_ADDRESS = 0xDDB132FBC4b3288d500b97d8B3bbCf174E0A07E5
 
-    this.erc20ContractAddress = process.env.REACT_APP_ERC20CONTRACT_ADDRESS;
-    this.faucetContractAddress = process.env.REACT_APP_FAUCET_CONTRACT_ADDRESS;
-    this.pollContractAddress = process.env.REACT_APP_POLL_CONTRACT_ADDRESS;
+    this.erc20ContractAddress = '0xB163626D6785a8e136C43fe78c6570D7d6b31c2A';
+    this.faucetContractAddress = '0x43f420AE27E4dfDbb4D097DD355BD8b0098bA744';
+    this.pollContractAddress = '0xA09646632DA392Fe6256D70e537dF7a2Ca09bAB1';
 
     this.erc20contract = new this.web3.eth.Contract(erc20Abi, this.erc20ContractAddress);
     this.faucetContract = new this.web3.eth.Contract(faucetAbi, this.faucetContractAddress);
@@ -51,24 +56,24 @@ export class ContractsApi {
     return new TransactionWatcher(promiEvent);
   }
 
-  async fetchName(){
+  async fetchName() {
     return this.pollContract.methods.electionName().call();
   }
 
-  async fetchDescription(){
+  async fetchDescription() {
     return this.pollContract.methods.description().call();
   }
 
-  async fetchCandidates(){
+  async fetchCandidates() {
     return this.pollContract.methods.getCandidates().call();
   }
 
-  async join(){
+  async join() {
     this.pollContract.methods.join().send({ from: this.selectedAddress });
     this.erc20contract.methods.approve(this.pollContractAddress, 1).send({ from: this.selectedAddress });
   }
 
-  vote(voteIndex){
+  vote(voteIndex) {
     const promiEvent = this.pollContract.methods.vote(voteIndex).send({ from: this.selectedAddress });
     console.log(promiEvent);
     return new TransactionWatcher(promiEvent);

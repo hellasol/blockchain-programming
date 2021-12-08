@@ -129,7 +129,7 @@ export function DApp() {
           <div className="row text-center">
             <div className="col-md-12">
               <p className="copy pt-100">
-                Group ? &copy; 2021 All Right Reserved
+                Group 9 &copy; 2021 All Right Reserved
               </p>
             </div>
           </div>
