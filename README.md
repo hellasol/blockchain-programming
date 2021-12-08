@@ -1,17 +1,63 @@
-# blockchain-programmingIn the project directory, you can run:
+# VOTE Token (Blockchain Programming Lab Group 9)
 
-yarn start
+## Project Description
+In this project, a token-based voting system was developed and deployed on the UZHETH network. The focus was on developing smart contracts for the ERC-20 token, ERC-20 Faucet, and Poll. We also developed a simple frontend in order to demonstrate the functioning of the smart contracts. 
 
-Runs the app in the development mode.
-Open http://localhost:3000 to view it in the browser.
+## Running the project locally
+Clone and open the project 
+```
+git clone https://github.com/hellasol/blockchain-programming.git
+```
 
-The page will reload if you make edits.
-You will also see any lint errors in the console.
+```
+cd blockchain-programming
+```
+```
+code .
+```
 
-yarn build
+Install dependencies
+```
+npm install
+```
+Run the start script and the web app will be available on http://localhost:3000/
+```
+npm start
+```
+You need to use a Chrome browser and have MetaMask installed for it to work properly. 
 
-Builds the app for production to the build folder.
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Once you have logged into your MetaMask account you will be able to mint your first **VOTE** token by using the faucet. 
 
-The build is minified and the filenames include the hashes.
-Your app is ready to be deployed!
+You can then use the **VOTE** token to cast a vote in the poll. 
+
+## Deploying your own contract 
+
+Add the new contract in the **contracts** folder. 
+
+Add a new migration file in the **migrations** folder. Example of migration file:
+```ts
+const  VoteToken = artifacts.require("VoteToken");
+const  Poll = artifacts.require("Poll")
+
+module.exports = async  function (deployer, network, accounts) {
+	const  voteToken = await  VoteToken.deployed();
+	const  poll = await  deployer.deploy(Poll, 'Who will win?', 'Who will win the election?', 'Trump', 'Biden', voteToken.address);
+};
+```
+
+Compile and deploy the new contract on the **Kovan** test network:
+```
+truffle console --network kovan
+```
+```
+migrate
+```
+Compile and deploy the new contract on the **UZHETH** network:
+```
+truffle console --network uzheth
+```
+```
+migrate
+```
+Use the resulting **contract address** to interact with your contract. 
+You can add any other networks in the truffle-config.js file. 
