@@ -74,9 +74,9 @@ export function DApp() {
       </nav>
       <section className="pt-150 pb-150">
         <div className="container">
-          <div class="row">
+          <div className="row">
             {/* CREATE POLL
-            <div class="col-lg-5 col-md-6">
+            <div className="col-lg-5 col-md-6">
               <h2>CREATE POLL </h2>
               <form>
                 <label className="formLabel" for="pollName">Poll Name:</label><br />
@@ -102,7 +102,7 @@ export function DApp() {
             */}
 
             {/* FAUCET */}
-            <div class="col-lg-7 col-md-6">
+            <div className="col-lg-5 col-md-6">
               <div className="container">
                 <h2>FAUCET</h2>
                 <div className="faucet-img">
@@ -113,14 +113,14 @@ export function DApp() {
                 </span>
               </div>
             </div>
+            {/* ALL POLLS */}
+            <div className="col-lg-7 col-md-6">
+              <div className="container">
+                <h2>ALL POLLS</h2>
+                <SimpleSlider />
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
-      {/* ALL POLLS */}
-      <section className="services pt-100 pb-150">
-        <div className="container">
-          <h2>ALL POLLS</h2>
-          <SimpleSlider />
         </div>
       </section>
       {/* FOOTER */}

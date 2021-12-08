@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 import { ContractsApi } from "../ContractsApi";
 
+//Carousel to display all open polls
 export class SimpleSlider extends Component {
     constructor() {
         super();
@@ -58,9 +58,9 @@ export class SimpleSlider extends Component {
                 <div>
                     <h4>{this.state.pollName}</h4>
                     <div className="poll-description">{this.state.pollDescription}</div>
-                    <label className="formLabel" for="option1">{this.state.option1}</label>
+                    <label className="formLabel" htmlFor="option1">{this.state.option1}</label>
                     <input type="radio" value="option1"></input><br />
-                    <label className="formLabel" for="option2">{this.state.option2}</label>
+                    <label className="formLabel" htmlFor="option2">{this.state.option2}</label>
                     <input type="radio" value="option2"></input><br />
                     <span className="about-button">
                         <a className="main-btn" onClick={() => this.handleJoin()}>Join Poll</a>

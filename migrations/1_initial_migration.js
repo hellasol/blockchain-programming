@@ -13,8 +13,6 @@ module.exports = async function (deployer, network, accounts) {
 
   //grant minterrole to faucet
   await voteToken.grantRole(await voteToken.MINTER_ROLE(), voteTokenFaucet.address);
-
-  const poll = await deployer.deploy(Poll, 'Who will win?', 'Who will win the election?', 'Trump', 'Biden', voteToken.address);
 };
 
 
