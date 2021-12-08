@@ -30,6 +30,7 @@ Once you have logged into your MetaMask account you will be able to mint your fi
 
 You can then use the **VOTE** token to cast a vote in the poll. 
 
+
 ## Deploying your own contract 
 
 Add the new contract in the **contracts** folder. 
@@ -60,4 +61,5 @@ truffle console --network uzheth
 migrate
 ```
 Use the resulting **contract address** to interact with your contract. 
+
 You can add any other networks in the truffle-config.js file. 
