@@ -8,36 +8,48 @@ export class SimpleSlider extends Component {
     constructor() {
         super();
         this.state = {
-            pollName : "testName",
-            pollDescription : "testDescription lalalalallatestDescription lalalalallatestDescription lalalalallatestDescription lalalalalla",
-            option1 : "TestOption1",
-            option2 : "TestOption2"
+            pollName : "",
+            pollDescription : "",
+            option1 : "",
+            option2 : ""
         };
-        this.handleJoinPoll = this.handleJoinPoll.bind(this);
+        this.handleJoin = this.handleJoin.bind(this);
         this.handleVote = this.handleVote.bind(this);
+        this.fetchData = this.fetchData.bind(this);
     }
-    
-    componentDidUpdate() {
+
+    componentDidMount(){
         this.fetchData();
     }
 
     async fetchData(){
         const contractsApi = new ContractsApi();
         try {
-            const data = await contractsApi.fetchPoll()
-            console.log('data: ', data)
+            const name = await contractsApi.fetchName();
+            const description = await contractsApi.fetchDescription();
+            const candidates = await contractsApi.fetchCandidates();
+            console.log(candidates);
+            this.setState(() => ({ pollName: name}));
+            this.setState(() => ({ pollDescription: description}));
+            this.setState(() => ({ option1: candidates[0][0]}));
+            this.setState(() => ({ option2: candidates[1][0]}));
           } catch (err) {
             console.log("Error: ", err)
           }
+          
         console.log('fetchedData')
     }
 
-    handleJoinPoll(){
-        console.log('joinedPoll')
+    handleJoin(pollID){
+        const contractsApi = new ContractsApi();
+        contractsApi.join(pollID);
     }
 
-    handleVote(){
-        console.log('voted')
+    handleVote(value){
+        const contractsApi = new ContractsApi();
+        contractsApi
+        .vote(value)
+        .onConfirmation(() => console.log('voted for', value));
     }
 
     render() {
@@ -51,48 +63,12 @@ export class SimpleSlider extends Component {
                     <label className="formLabel" for="option2">{this.state.option2}</label>
                     <input type="radio" value="option2"></input><br />
                     <span className="about-button">
-                        <a className="main-btn" onClick={this.handleJoinPoll}>Join Poll</a>
+                        <a className="main-btn" onClick={() => this.handleJoin()}>Join Poll</a>
                     </span>
                     <span className="about-button">
-                        <a className="main-btn" onClick={this.handleVote}>Vote</a>
+                        <a className="main-btn" onClick={() => this.handleVote(1)}>Vote</a>
                     </span>
                 </div>
-                {/* 
-                <div>
-                    <h4>POLL NAME</h4>
-                    <h6>Expiration: 01.01.2022</h6>
-                    <div className="poll-description">This is a poll about something really cool. Lala lala llalaaaaaa. This is a poll about something really cool. Lala lala llalaaaaaa. This is a poll about something really cool. Lala lala llalaaaaaa. This is a poll about something really cool. Lala lala llalaaaaaa. This is a poll about something really cool. Lala lala llalaaaaaa.</div>
-                    <label className="formLabel" for="option1">Option 1:</label>
-                    <input type="radio" value="option1"></input><br />
-                    <label className="formLabel" for="option2">Option 2:</label>
-                    <input type="radio" value="option2"></input><br />
-                    <label className="formLabel" for="option3">Option 3:</label>
-                    <input type="radio" value="option3"></input><br />
-                    <span className="about-button">
-                        <a className="main-btn">Join Poll</a>
-                    </span>
-                    <span className="about-button">
-                        <a className="main-btn">Vote</a>
-                    </span>
-                </div>
-                <div>
-                    <h4>POLL NAME</h4>
-                    <h6>Expiration: 01.01.2022</h6>
-                    <div className="poll-description">This is a poll about something really cool. Lala lala llalaaaaaa. This is a poll about something really cool. Lala lala llalaaaaaa. This is a poll about something really cool. Lala lala llalaaaaaa. This is a poll about something really cool. Lala lala llalaaaaaa. This is a poll about something really cool. Lala lala llalaaaaaa.</div>
-                    <label className="formLabel" for="option1">Option 1:</label>
-                    <input type="radio" value="option1"></input><br />
-                    <label className="formLabel" for="option2">Option 2:</label>
-                    <input type="radio" value="option2"></input><br />
-                    <label className="formLabel" for="option3">Option 3:</label>
-                    <input type="radio" value="option3"></input><br />
-                    <span className="about-button">
-                        <a className="main-btn">Join Poll</a>
-                    </span>
-                    <span className="about-button">
-                        <a className="main-btn">Vote</a>
-                    </span>
-                </div>
-                */}
             </Carousel>
         );
     }

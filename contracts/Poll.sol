@@ -10,7 +10,7 @@ contract Poll {
     }
     
     struct Voter {
-        bool authorized;
+        bool joined;
         bool voted;
         uint256 vote;
     }
@@ -48,15 +48,18 @@ contract Poll {
     function getNumCandidate() public view returns(uint256) {
         return candidates.length;
     }
-    
-    function authorize(address _person) ownerOnly public {
-        voters[_person].authorized = true;
+
+    function getCandidates() public view returns(Candidate [] memory){
+        return candidates;
     }
     
-    function getVote() public{
-        require(token.balanceOf(msg.sender) >= 1, "Not enough balance");
-        require(token.transferFrom(msg.sender, address(this), 1));
-        voters[msg.sender].authorized = true;
+    function join() public{
+        require(
+            !voters[msg.sender].joined,
+            "Joined already!"
+            );
+            
+        voters[msg.sender].joined=true;    
     }
     
     function vote(uint256 _voteIndex) public{
@@ -65,8 +68,8 @@ contract Poll {
             "Voted already!"
             );
         require(
-            voters[msg.sender].authorized,
-            "Not authorized to vote!"
+            voters[msg.sender].joined,
+            "Join it first!"
             );
         
        

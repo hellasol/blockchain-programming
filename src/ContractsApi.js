@@ -50,10 +50,30 @@ export class ContractsApi {
     return new TransactionWatcher(promiEvent);
   }
 
-  async fetchPoll(){
-    return this.pollContract.methods.token().call();
+  async fetchName(){
+    return this.pollContract.methods.electionName().call();
+  }
+
+  async fetchDescription(){
+    return this.pollContract.methods.description().call();
+  }
+
+  async fetchCandidates(){
+    return this.pollContract.methods.getCandidates().call();
+  }
+
+  async join(){
+    this.pollContract.methods.join().send({ from: this.selectedAddress });
+    this.erc20contract.methods.approve(this.pollContractAddress, 1).send({ from: this.selectedAddress });
+  }
+
+  vote(voteIndex){
+    const promiEvent = this.pollContract.methods.vote(voteIndex).send({ from: this.selectedAddress });
+    console.log(promiEvent);
+    return new TransactionWatcher(promiEvent);
   }
 }
+
 class TransactionWatcher {
   constructor(promiEvent) {
     this.promiEvent = promiEvent;
