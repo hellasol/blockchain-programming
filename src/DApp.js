@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Col } from "reactstrap";
 import { ContractsApi } from "./ContractsApi";
 import "./css/style.css"
 import faucet from "./img/faucet.png"
@@ -52,6 +51,7 @@ export function DApp() {
     );
   }
 
+  //mints tokens to the selected address
   function handleMint() {
     contractsApi
       .mint()
@@ -120,7 +120,7 @@ export function DApp() {
       <section className="services pt-100 pb-150">
         <div className="container">
           <h2>ALL POLLS</h2>
-          <SimpleSlider/>
+          <SimpleSlider />
         </div>
       </section>
       {/* FOOTER */}

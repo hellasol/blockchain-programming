@@ -9,6 +9,7 @@ contract VoteTokenFaucet {
         _token = token;
     }
 
+    //calls the mint function in the VoteToken contract
     function mint() public {
         _token.mint(msg.sender, 1);
     }

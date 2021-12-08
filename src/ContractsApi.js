@@ -3,6 +3,7 @@ import { abi as erc20Abi } from "./build/contracts/VoteToken.json";
 import { abi as faucetAbi } from "./build/contracts/VoteTokenFaucet.json";
 import { abi as pollAbi } from "./build/contracts/Poll.json";
 
+//ContractsApi is a wrapper for web3.js. It provides a convenient way to interact with the contracts.
 export class ContractsApi {
   async init() {
     if (!window.ethereum) {
