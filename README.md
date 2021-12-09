@@ -47,13 +47,68 @@ module.exports = async  function (deployer, network, accounts) {
 ```
 
 Compile and deploy the new contract on the **Kovan** test network:
+
+You will need to add a **mnemonic** and a **projectId** to your secrets.json file. 
+You can create a **mnemonic** by running the following command:
+```
+npx mnemonics
+```
+We recomend you use **infura.io** to create a project and add the resulting **projectId** to the secrets.json. 
+
+```ts
+{
+    "mnemonic": "******* ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******",
+    "projectId": "***********************************"
+}
+```
+
+The **mnemonic** and **projectId** are used in the truffel-config.js file: 
+
+```ts
+{
+    kovan: {
+      provider: () =>
+        new HDWalletProvider(
+          mnemonic,
+          `https://kovan.infura.io/v3/${projectId}`
+        ),
+      network_id: "42",
+    },
+}
+```
+You can now migrate your contract by executing the following commands in the console: 
+
 ```
 truffle console --network kovan
 ```
 ```
 migrate
 ```
+
 Compile and deploy the new contract on the **UZHETH** network:
+
+You will need create a **mnemonic** and add it to your secrets.json file.
+You can create a **mnemonic** by running the following command:
+
+```
+npx mnemonics
+```
+
+The **mnemonic** is used in the truffel-config.js file: 
+
+```ts
+{
+    uzheth: {
+      provider: () =>
+        new HDWalletProvider(
+          mnemonic,
+          'http://130.60.244.246:8545'
+        ),
+      network_id: "702",
+    },
+```
+You can now migrate your contract by executing the following commands in the console: 
+
 ```
 truffle console --network uzheth
 ```
