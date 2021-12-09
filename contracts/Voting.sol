@@ -4,7 +4,7 @@ import "./VoteToken.sol";
 
 contract Voting {
 
-    #event for the JavaSript frontend
+    //event for the JavaSript frontend
     event _PollCreated(string pollName, string description, uint256 indexed pollID, address indexed creator);
 
     //own data structure to define a poll
