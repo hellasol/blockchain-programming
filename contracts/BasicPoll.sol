@@ -69,7 +69,7 @@ contract BasicPoll {
             "Not authorized to vote!"
             );
         
-        //when invoked, restrict function usage only to contract owner
+        //the vote is for the candidate at _voteIndex
         voters[msg.sender].vote=_voteIndex;
         //now voted
         voters[msg.sender].voted=true;
