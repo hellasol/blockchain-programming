@@ -13,6 +13,8 @@ contract Voting {
         string pollName;
         string description;
         uint256 totalVotes;
+        uint256 expirationDate;
+        bool open;
         //define key-value voters map, i.e. each voter has an address
         mapping(address => Voter) voters;
         Candidate [] candidates;
@@ -24,7 +26,7 @@ contract Voting {
     }
     
     struct Voter {
-        bool joined;
+        bool authorized;
         bool voted;
         uint256 vote;
     }
@@ -36,13 +38,29 @@ contract Voting {
     //the ERC20 tokens used for voting
     VoteToken public token;
 
+    //check if it's the owner
+    modifier ownerOnly(uint256 id){
+        require(msg.sender==polls[id].owner, "Only the owner can do this");
+        //execute function if owner condition was met
+        _;
+    }
+
+    //check if the expirationDate has been passed
+    modifier timerOver(uint256 id){
+        require(block.timestamp <= polls[id].expirationDate, "Poll not valid anymore");
+        //execute function if the poll is still valid
+        _;
+    }
+
+    //create the new contract (on deployment)
     constructor(address _token) {
         //make sure no zero address is used to create the vote token
         require(_token != address(0) && address(token) == address(0));
         token = VoteToken(_token);
     }  
 
-    function createPoll(string memory _pollName, string memory _description, string memory _candidate1, string memory _candidate2) public returns (uint256){
+    //create a new poll with name, description, 2 candidates and make it open/private
+    function createPoll(string memory _pollName, string memory _description, string memory _candidate1, string memory _candidate2, bool _open) public returns (uint256){
         pollID = pollID + 1;
 
         Poll storage newPoll = polls[pollID];
@@ -50,6 +68,8 @@ contract Voting {
         newPoll.pollName = _pollName;
         newPoll.description = _description;
         newPoll.totalVotes = 0;
+        newPoll.expirationDate = block.timestamp + 30 minutes;
+        newPoll.open = _open;
 
         //by default 2 candidates
         polls[pollID].candidates.push(Candidate(_candidate1,0));
@@ -61,7 +81,7 @@ contract Voting {
     }
     
     //get the number of candidates for the current poll
-    function getNumCandidate(uint256 _pollID) public view returns(uint256) {
+    function getNumCandidate(uint256 _pollID) timerOver(_pollID) public view returns(uint256) {
         return polls[_pollID].candidates.length;
     }
     
@@ -70,22 +90,24 @@ contract Voting {
     function getCandidates(uint256 _pollID) public view returns(Candidate [] memory){
         return polls[_pollID].candidates;
     }
-    
-    //join Poll with _pollID, only once per voter
-    function joinPoll(uint256 _pollID) public{
-        require(
-            !polls[_pollID].voters[msg.sender].joined,
-            "Joined already!"
-            );
-        //remembering this address joined in this poll
-        polls[_pollID].voters[msg.sender].joined=true;
+
+    //autherize addressess manually
+    function authorize(uint256 _pollID, address _person) ownerOnly(_pollID) timerOver(_pollID) public {
+        polls[_pollID].voters[_person].authorized = true;
     }
     
-    function vote(uint256 _pollID, uint256 _voteIndex) public{
-        require(
-            !polls[_pollID].voters[msg.sender].voted,
-            "Voted already!"
-            );
+    //join Poll with _pollID, only once per voter
+    function joinPoll(uint256 _pollID) timerOver(_pollID) public{
+        require(!polls[_pollID].voters[msg.sender].authorized,"You're authorized already!");
+        require(polls[_pollID].open, "This is only for authorized people");
+        //remembering this address joined in this poll
+        polls[_pollID].voters[msg.sender].authorized=true;
+    }
+    
+    //vote for specific candidate in specific poll
+    function vote(uint256 _pollID, uint256 _voteIndex) timerOver(_pollID) public{
+        require(polls[_pollID].voters[msg.sender].authorized = true, "You're not authorized to do this. Join or request authorization from the owner");        
+        require(!polls[_pollID].voters[msg.sender].voted, "Voted already!");
         
         //voter needs one token to be able to vote
         require(token.balanceOf(msg.sender) >= 1, "Not enough balance");

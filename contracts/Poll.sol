@@ -53,7 +53,7 @@ contract Poll {
         //make sure no zero address is used to create the vote token
         require(_token != address(0) && address(token) == address(0));
         
-        //vote tokens will be ERC20 tokens; "connecting it"
+        //vote tokens will be ERC20 tokens; instantiating one
         token = VoteToken(_token);
     }  
     
