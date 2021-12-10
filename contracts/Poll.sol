@@ -40,7 +40,7 @@ contract Poll {
         _;
     }
 
-    //the poll will have these attributes by default
+    //the constructor of the poll with a name, description, 2 candidates and the corresponding token address
     constructor(string memory _name, string memory _description, string memory _candidate1, string memory _candidate2, address _token) {  
         owner = msg.sender;
         electionName = _name;
@@ -53,7 +53,7 @@ contract Poll {
         //make sure no zero address is used to create the vote token
         require(_token != address(0) && address(token) == address(0));
         
-        // vote tokens will be ERC20 tokens; instantiating one
+        //vote tokens will be ERC20 tokens; "connecting it"
         token = VoteToken(_token);
     }  
     
@@ -86,6 +86,7 @@ contract Poll {
     
     //voting
     function vote(uint256 _voteIndex) public{
+        //check if the sender has voted already + if he joined the poll 
         require(
             !voters[msg.sender].voted,
             "Voted already!"
@@ -94,6 +95,11 @@ contract Poll {
             voters[msg.sender].joined,
             "Join it first!"
             );
+        
+        //voter needs one token to be able to vote
+        require(token.balanceOf(msg.sender) >= 1, "Not enough balance");
+        //cast the vote, by sending one token to the Voting contract address
+        require(token.transferFrom(msg.sender, address(this), 1));
         
         //voting for candidate at _voteIndex
         voters[msg.sender].vote=_voteIndex;

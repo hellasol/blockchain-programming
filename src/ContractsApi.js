@@ -25,6 +25,12 @@ export class ContractsApi {
     // REACT_APP_FAUCET_CONTRACT_ADDRESS = 0xA09646632DA392Fe6256D70e537dF7a2Ca09bAB1
     // REACT_APP_POLL_CONTRACT_ADDRESS = 0xDDB132FBC4b3288d500b97d8B3bbCf174E0A07E5
 
+    //FOR Local development
+    //this.erc20ContractAddress = '0xF6Cfb6eA7E844Cd6cb8112F1095ff63585502536';
+    //this.faucetContractAddress = '0xbF347e7D5a264101B717229C020B84d65e46aAC2';
+    //this.pollContractAddress = '0x9736bA8ad7832b1B13b92FB2e76197944F63c589';
+
+    
     this.erc20ContractAddress = '0xB163626D6785a8e136C43fe78c6570D7d6b31c2A';
     this.faucetContractAddress = '0x43f420AE27E4dfDbb4D097DD355BD8b0098bA744';
     this.pollContractAddress = '0xA09646632DA392Fe6256D70e537dF7a2Ca09bAB1';
