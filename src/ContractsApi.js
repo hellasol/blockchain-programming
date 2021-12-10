@@ -33,7 +33,7 @@ export class ContractsApi {
     
     this.erc20ContractAddress = '0xB163626D6785a8e136C43fe78c6570D7d6b31c2A';
     this.faucetContractAddress = '0x43f420AE27E4dfDbb4D097DD355BD8b0098bA744';
-    this.pollContractAddress = '0xA09646632DA392Fe6256D70e537dF7a2Ca09bAB1';
+    this.pollContractAddress = '0x3E81C1d231a605974Dc4Ca20C2fd6a20d5cFC51C';
 
     this.erc20contract = new this.web3.eth.Contract(erc20Abi, this.erc20ContractAddress);
     this.faucetContract = new this.web3.eth.Contract(faucetAbi, this.faucetContractAddress);
